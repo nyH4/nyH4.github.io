@@ -29,6 +29,7 @@ function GetURLParameter(name) {
       ge = instance;
       ge.getWindow().setVisibility(true);
 	  ge.getNavigationControl().setVisibility(ge.VISIBILITY_SHOW)
+	  ge.getLayerRoot().enableLayerById(ge.LAYER_ROADS, true);
 
 	  // Get the current view.
 	  var lookAt = ge.getView().copyAsLookAt(ge.ALTITUDE_RELATIVE_TO_GROUND);
