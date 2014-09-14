@@ -2,10 +2,9 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Test</title>
+<title></title>
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
 
 <script type="text/javascript">
 
@@ -25,8 +24,7 @@ function GetURLParameter(name) {
 	var lat = parseFloat(GetURLParameter('lat'));
 	var lng = parseFloat(GetURLParameter('lng'));
 	var range = parseFloat(GetURLParameter('zoom'));
-	var dsc = decodeURIComponent(GetURLParameter('description'));
-	
+	var dsc = decodeURIComponent(GetURLParameter('description'));	
 
       ge = instance;
       ge.getWindow().setVisibility(true);
@@ -34,20 +32,6 @@ function GetURLParameter(name) {
 
 	  // Get the current view.
 	  var lookAt = ge.getView().copyAsLookAt(ge.ALTITUDE_RELATIVE_TO_GROUND);
-
-		geocoder = new google.maps.Geocoder();
-		
-		geocoder.geocode({'address': lat + " " + lng}, function(results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    alert(results[0].geometry.location.latitude + " " + results[0].geometry.location.longitude);
-					// results[0].geometry.location.longitude
-
-                } else {
-                    alert("Geocode was not successful for the following reason: " + status);                    
-                }
-            });
-
-
 
 		// Set new latitude and longitude values.
 		lookAt.setLatitude(lat);
@@ -69,8 +53,8 @@ function GetURLParameter(name) {
 
 		// Set the placemark's location.  
 		var point = ge.createPoint('');
-		point.setLatitude(33.171331);
-		point.setLongitude(-97.882403);
+		point.setLatitude(lat);
+		point.setLongitude(lng);
 		placemark.setGeometry(point);
 
 		// Add the placemark to Earth.
