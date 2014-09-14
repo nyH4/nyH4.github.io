@@ -1,13 +1,91 @@
 <!doctype html>
 <html>
-<head>
-<meta charset="utf-8">
-<title>Test</title>
-</head>
+    <head>
+        <meta charset="utf-8">
+        <title>Code Generator</title>
+		<link href="style.css" rel="stylesheet" type="text/css">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script>
+            var url = 'http://nyh4.github.io/googlemaps/googlemap.html';
 
-<body>
+            var lat;
+            var lng;
+            var range;
+            var dsc;
+            var code;
 
-<iframe frameborder="0" width="500" height="400" scrolling="no" style="display:block;" src="http://nyh4.github.io/googlemaps/googlemap.html?lat=33.171331&lng=-97.882403&zoom=500&description=BLK 1 Lot 20"></iframe>
+            jQuery(document).ready(function () {
 
-</body>
+
+                jQuery("#generate").click(function () {
+                    jQuery(".result").show();
+
+                    lat = jQuery("#lat").val();
+                    lng = jQuery("#lng").val();
+                    range = parseFloat(jQuery("#zoom").val());
+                    dsc = jQuery("#description").val();
+
+                    document.getElementById('map3d').innerHTML = '';
+
+                    html = '<iframe frameborder="0" width="500" height="400" scrolling="no" style="display:block;" src="' + url + '?lat=' + encodeURIComponent(lat) + '&lng=' + encodeURIComponent(lng) + '&zoom=' + encodeURIComponent(range) + '&description=' + encodeURIComponent(dsc) + '"></iframe>';
+
+                    jQuery("#code").html(html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"));
+                    jQuery("#code").change();
+                    jQuery("#map3d").html("<div>Result:</div>" + html);
+
+                })
+            })
+        </script>
+    </head>
+
+    <body>
+        <div id="container">
+            <div id="header"></div>
+            <div id="body">
+				<div class="title">Code Generator</div>
+                <form name="f" id="f" class="f"> 
+                    <div class="row">
+                        <div class="label">lat:</div>
+                        <div class="input">
+                            <input type="text" name="lat" id="lat">
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="label">long:</div>
+                        <div class="input">
+                            <input type="text" name="lng" id="lng">
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="label">zoom:</div>
+                        <div class="input">
+                            <input type="text" name="zoom" id="zoom" value="500">
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="label">description:</div>
+                        <div class="input">
+                            <input type="text" name="description" id="description" value="BLK 1 Lot 20">
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <br/>
+                    <input type="button" name="generate" id="generate" value="Generate code">
+                </form>
+                <div class="result">
+                    <hr/>
+                    <div class="code">
+                        <textarea name="code" id="code"></textarea>
+                    </div>
+                    <hr />
+                    <div id="map3d"></div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div id="footer"></div>
+        </div>
+    </body>
 </html>
