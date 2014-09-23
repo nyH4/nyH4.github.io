@@ -21,10 +21,10 @@ function GetURLParameter(name) {
     }
 
     function initCB(instance) {
-	var lat = parseFloat(GetURLParameter('lat'));
-	var lng = parseFloat(GetURLParameter('lng'));
-	var range = parseFloat(GetURLParameter('zoom'));
-	var dsc = decodeURIComponent(GetURLParameter('description'));	
+	var lat = GetURLParameter('lat');
+	var lng = GetURLParameter('lng');
+	var range = GetURLParameter('zoom');
+	var name = decodeURIComponent(GetURLParameter('description'));	
 
       ge = instance;
       ge.getWindow().setVisibility(true);
@@ -32,35 +32,38 @@ function GetURLParameter(name) {
 	  ge.getLayerRoot().enableLayerById(ge.LAYER_ROADS, true);
 	  ge.getLayerRoot().enableLayerById(ge.LAYER_BORDERS, true);
 
-	  // Get the current view.
-	  var lookAt = ge.getView().copyAsLookAt(ge.ALTITUDE_RELATIVE_TO_GROUND);
+	  var kmlString = ''
+              + '<?xml version="1.0" encoding="UTF-8"?>'
+              + '<kml xmlns="http://www.opengis.net/kml/2.2">'
 
-		// Set new latitude and longitude values.
-		lookAt.setLatitude(lat);
-		lookAt.setLongitude(lng);
-		if (range != null) {
-			lookAt.setRange(range);
-		}
+              + '<Document>'
+              + '  <Camera>'
+			  + '    <longitude>' + lng + '</longitude>'
+              + '    <latitude>' + lat + '</latitude>'
+              + '    <altitude>' + range + '</altitude>'
+              + '    <heading>0</heading>'
+              + '    <tilt>0</tilt>'
+              + '  </Camera>'
+			  + '  <Style id="pstyle">'
+			  + '    <LabelStyle>'
+			  + '      <color>fffcfb25</color>'
+			  + '    </LabelStyle>'
+			  + '  </Style>'
+              + '  <Placemark>'
+              + '    <name>' + name + '</name>'
+              + '    <styleUrl>#pstyle</styleUrl>'
+              + '    <Point>'
+              + '      <coordinates>' + lng + ',' + lat + ',0</coordinates>'
+              + '    </Point>'
+              + '  </Placemark>'
 
-		// Update the view in Google Earth.
-		ge.getView().setAbstractView(lookAt);
+              + '</Document>'
+              + '</kml>';
 
-
-		// Create the placemark.
-		var placemark = ge.createPlacemark('');
-		if (dsc != null) {
-			placemark.setName(dsc);
-		}
-
-
-		// Set the placemark's location.  
-		var point = ge.createPoint('');
-		point.setLatitude(lat);
-		point.setLongitude(lng);
-		placemark.setGeometry(point);
-
-		// Add the placemark to Earth.
-		ge.getFeatures().appendChild(placemark);
+	  var kmlObject = ge.parseKml(kmlString);
+	  ge.getFeatures().appendChild(kmlObject);
+      if (kmlObject.getAbstractView())
+		ge.getView().setAbstractView(kmlObject.getAbstractView());
 
     }
 

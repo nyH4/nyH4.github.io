@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<script type="text/javascript">
+
+function GetURLParameter(name) {
+    var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
+    return results[1] || 0;
+}
+
+    var ge;
+    google.load("earth", "1", {"other_params":"sensor=true"});
+
+    function init() {
+      google.earth.createInstance('map3d', initCB, failureCB);
+    }
+
+    function initCB(instance) {
+	var lat = parseFloat(GetURLParameter('lat'));
+	var lng = parseFloat(GetURLParameter('lng'));
+	var range = parseFloat(GetURLParameter('zoom'));
+	var dsc = decodeURIComponent(GetURLParameter('description'));	
+
+      ge = instance;
+      ge.getWindow().setVisibility(true);
+	  ge.getNavigationControl().setVisibility(ge.VISIBILITY_SHOW)
+	  ge.getLayerRoot().enableLayerById(ge.LAYER_ROADS, true);
+	  ge.getLayerRoot().enableLayerById(ge.LAYER_BORDERS, true);
+
+	  // Get the current view.
+	  var lookAt = ge.getView().copyAsLookAt(ge.ALTITUDE_RELATIVE_TO_GROUND);
+
+		// Set new latitude and longitude values.
+		lookAt.setLatitude(lat);
+		lookAt.setLongitude(lng);
+		if (range != null) {
+			lookAt.setRange(range);
+		}
+
+		// Update the view in Google Earth.
+		ge.getView().setAbstractView(lookAt);
+
+
+		// Create the placemark.
+		var placemark = ge.createPlacemark('');
+		if (dsc != null) {
+			placemark.setName(dsc);
+		}
+
+
+		// Set the placemark's location.  
+		var point = ge.createPoint('');
+		point.setLatitude(lat);
+		point.setLongitude(lng);
+		placemark.setGeometry(point);
+
+		// Add the placemark to Earth.
+		ge.getFeatures().appendChild(placemark);
+
+    }
+
+    function failureCB(errorCode) {
+    }
+
+    google.setOnLoadCallback(init);
+  </script>
+
+</head>
+
+<body style="margin: 0">
+<div id="map3d" style=" width: 500px; height: 400px;"></div>
+
+</body>
+</html>
